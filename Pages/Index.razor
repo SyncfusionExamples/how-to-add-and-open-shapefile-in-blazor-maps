@@ -1,0 +1,99 @@
+﻿@page "/"
+
+@using Syncfusion.Blazor.Maps;
+
+<div>
+    <SfMaps>
+        <MapsZoomSettings Enable="true" ZoomFactor="3">
+        </MapsZoomSettings>
+        <MapsCenterPosition Latitude="39.113014" Longitude="-105.358887"></MapsCenterPosition>
+        <MapsLayers>
+            <MapsLayer ShapeData='new {dataOptions = "https://cdn.syncfusion.com/maps/map-data/usa-states.shp"}' TValue="string">
+                <MapsNavigationLines>
+                    @{
+                        foreach (var navigationLine in WinterFlightRoutes)
+                        {
+                            @foreach (var winterFlight in CenterPoint)
+                            {
+                                <MapsNavigationLine Visible="true" Width="2" Angle="-0.4" Color="#F58027" Latitude="new double[]{ winterFlight.Latitude,navigationLine.Latitude }" Longitude="new double[]{ winterFlight.Longitude, navigationLine.Longitude }" />
+                            }
+                        }
+                    }
+                </MapsNavigationLines>
+                <MapsMarkerSettings>
+                    <MapsMarker Visible="true" TValue="WinterFlights" Height=10 Width=10 DataSource="@WinterFlightRoutes" Shape="MarkerType.Circle" Fill="#F58027" AnimationDuration="0">
+                        <MapsMarkerTooltipSettings Visible="true" ValuePath="Name">
+                            <MapsMarkerTooltipTextStyle FontFamily="inherit"></MapsMarkerTooltipTextStyle>
+                        </MapsMarkerTooltipSettings>
+                    </MapsMarker>
+                    <MapsMarker Visible="true" DataSource="@WinterFlightRoutes" TValue="WinterFlights">
+                        <MarkerTemplate>
+                            @{
+                                var Data = context as WinterFlights;
+                                if (@Data.Name == "Dallas/Ft.Worth")
+                                {
+                                    <div style="font-size:14px;margin-top:-5px;margin-left:-102px;">@Data.Name</div>
+                                }
+                                else if (@Data.Name == "Dallas/Love Field")
+                                {
+                                    <div style="font-size:14px;margin-top:28px;margin-left:-90px;">@Data.Name</div>
+                                }
+                                else if (@Data.Name == "Los Angeles")
+                                {
+                                    <div style="font-size:14px;margin-left:-82px;">@Data.Name</div>
+                                }
+                                else
+                                {
+                                    <div style="font-size:14px;margin-top:26px;">@Data.Name</div>
+                                }
+
+                            }
+                        </MarkerTemplate>
+                    </MapsMarker>
+                </MapsMarkerSettings>
+                <MapsShapeSettings Fill="#DFD28B">
+                    <MapsShapeBorder Color="White" Width="2"></MapsShapeBorder>
+                </MapsShapeSettings>
+            </MapsLayer>
+        </MapsLayers>
+        <MapsLegendSettings Visible="false" />
+        <MapsTitleSettings Text="WINTER FLIGHTS 2023/24">
+            <MapsTitleTextStyle Size="18px" FontFamily="inherit" FontWeight="Bold"/>
+            <MapsSubtitleSettings Text="6 Airlines | 16 Nonstops">
+                <MapsSubtitleTextStyle Size="12px" FontFamily="inherit" FontWeight="Bold"></MapsSubtitleTextStyle>
+            </MapsSubtitleSettings>
+        </MapsTitleSettings>
+    </SfMaps>
+</div>
+@code {
+    public class WinterFlights
+    {
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+        public string Name { get; set; }
+    };
+
+    public List<WinterFlights> CenterPoint = new List<WinterFlights>
+    {
+        new WinterFlights { Name="Yampa Valley Airport", Latitude=40.481111, Longitude=-107.217778 }
+    };
+
+    public List<WinterFlights> WinterFlightRoutes = new List<WinterFlights> {
+        new WinterFlights { Name="Denver", Latitude=39.742043, Longitude=-104.991531 },
+        new WinterFlights { Name="Seattle", Latitude=47.608013, Longitude= -122.335167 },
+        new WinterFlights { Name="San Francisco", Latitude=37.773972, Longitude= -122.431297 },
+        new WinterFlights { Name="Los Angeles", Latitude=34.052235, Longitude=-118.243683 },
+        new WinterFlights { Name="San Diego", Latitude=32.715736, Longitude=-117.161087 },
+        new WinterFlights { Name="Minneapolis/St.Paul", Latitude=44.986656, Longitude=-93.258133 },
+        new WinterFlights { Name="Boston", Latitude=42.361145, Longitude=-71.057083 },
+        new WinterFlights { Name="Newark", Latitude=40.735657, Longitude=-74.172363 },
+        new WinterFlights { Name="Washington Dulles", Latitude=38.9531162, Longitude=-77.45653879999998 },
+        new WinterFlights { Name="Chicago", Latitude=41.789722, Longitude=-87.599724 },
+        new WinterFlights { Name="Nashville", Latitude=36.174465, Longitude=-86.767960 },
+        new WinterFlights { Name="Atlanta", Latitude=33.753746, Longitude=-84.386330 },
+        new WinterFlights { Name="Houston", Latitude=29.749907, Longitude=-95.358421 },
+        new WinterFlights { Name="Ft.Lauderdale", Latitude=26.122438, Longitude=-80.137314 },
+        new WinterFlights { Name="Dallas/Ft.Worth", Latitude=32.768799, Longitude=-97.309341 },
+        new WinterFlights { Name="Dallas/Love Field", Latitude=32.848152, Longitude=-96.851349 }
+    };
+}
